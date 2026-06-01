@@ -2,35 +2,17 @@ name: Flutter Tag Build
 
 on:
   workflow_dispatch:
-  # push:
+  push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - '[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+-[0-9]+'
       - '[0-9]+.[0-9]+.[0-9]+-[0-9]+'
 
-permissions:
-  contents: write
-
 jobs:
-  get-tag:
-    runs-on: ubuntu-latest
-    outputs:
-      tag_name: ${{ steps.tag.outputs.tag_name }}
-    steps:
-      - name: Get tag name
-        id: tag
-        run: |
-          if [ "${{ github.ref_type }}" == "tag" ]; then
-            echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          else
-            echo "tag_name=$(TZ='Asia/Shanghai' date +'%Y-%m-%d_%H-%M')" >> $GITHUB_OUTPUT
-          fi
-
   run-flutter-tag-build:
-    needs: get-tag
     uses: ./.github/workflows/flutter-build.yml
     secrets: inherit
     with:
       upload-artifact: true
-      upload-tag: ${{ needs.get-tag.outputs.tag_name }}
+      upload-tag: ${{ github.ref_name }}

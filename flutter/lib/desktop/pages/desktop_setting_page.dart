@@ -535,9 +535,14 @@ class _GeneralState extends State<_General> {
             'Check for software update on startup',
             kOptionEnableCheckUpdate,
             isServer: false,
-            enabled: false,
           ),
-
+        if (showAutoUpdate)
+          _OptionCheckBox(
+            context,
+            'Auto update',
+            kOptionAllowAutoUpdate,
+            isServer: true,
+          ),
         if (isWindows && !bind.isOutgoingOnly())
           _OptionCheckBox(
             context,
